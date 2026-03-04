@@ -4,7 +4,7 @@ import json
 
 app = Flask(__name__)
 
-# ================= MQTT CONFIG =================
+# Config
 MQTT_BROKER = "broker.hivemq.com"
 MQTT_PORT = 1883
 
@@ -19,7 +19,6 @@ latest_data = {
     "alert": "-"
 }
 
-# ================= MQTT CALLBACK (VERSION 2) =================
 def on_connect(client, userdata, flags, reason_code, properties):
     print("Connected to MQTT:", reason_code)
     client.subscribe(TOPIC_SENSOR)
@@ -47,7 +46,6 @@ def on_message(client, userdata, msg):
     except Exception as e:
         print("MQTT Parse Error:", e)
 
-# ================= MQTT CLIENT =================
 mqtt_client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
 mqtt_client.on_connect = on_connect
 mqtt_client.on_message = on_message
@@ -55,7 +53,7 @@ mqtt_client.on_message = on_message
 mqtt_client.connect(MQTT_BROKER, MQTT_PORT, 60)
 mqtt_client.loop_start()
 
-# ================= ROUTES =================
+# Endpoint
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -75,6 +73,6 @@ def control_led():
 
     return jsonify({"status": "success"})
 
-# ================= MAIN =================
+# Main
 if __name__ == "__main__":
     app.run(debug=True, use_reloader=False)

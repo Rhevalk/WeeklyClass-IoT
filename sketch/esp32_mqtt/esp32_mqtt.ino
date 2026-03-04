@@ -59,9 +59,6 @@ void readSensors() {
   humidity = dht.readHumidity();
 
   // kalibrasikan sesuai data min dan max
-  // misalnya
-  // 0.1 ppm = 843 (min)
-  // 100K ppm = 4041 (max)
   int gasLevel_raw = analogRead(GAS_PIN);
   gasLevel_ppm = exp((0.00845 * gasLevel_raw) - 24.10);
 
@@ -77,7 +74,7 @@ void handleAlarm() {
   if (gasLevel_ppm > gasThreshold) {
     digitalWrite(BUZZER_PIN, HIGH);
     digitalWrite(RELAY_PIN, HIGH);
-    client.publish((KEY + "/alert/gas").c_str(), "GAS_BERBAHAYA");
+    client.publish((KEY + "/alert/gas").c_str(), "Gas Berbahaya");
   } else {
     digitalWrite(BUZZER_PIN, LOW);
     digitalWrite(RELAY_PIN, LOW);

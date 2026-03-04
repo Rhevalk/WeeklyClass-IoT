@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>IoT Dashboard</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>  
@@ -11,7 +11,6 @@
     <div class="card">
         <div class="card-header">
             <h3>Temperature</h3>
-            <span class="icon">🌡️</span>
         </div>
         <div class="card-body">
             <h2 id="temp">0</h2>
@@ -22,7 +21,6 @@
     <div class="card">
         <div class="card-header">
             <h3>Humidity</h3>
-            <span class="icon">💧</span>
         </div>
         <div class="card-body">
             <h2 id="hum">0</h2>
@@ -33,7 +31,6 @@
     <div class="card">
         <div class="card-header">
             <h3>Gas Level</h3>
-            <span class="icon">🛢️</span>
         </div>
         <div class="card-body">
             <h2 id="gas">0</h2>
@@ -44,7 +41,6 @@
     <div class="card">
         <div class="card-header">
             <h3>Alert</h3>
-            <span class="icon">⚠️</span>
         </div>
         <div class="card-body">
             <h2 id="alert">-</h2>
@@ -78,6 +74,6 @@
         </div>
     </div>
 </div>
-<script src="script.js"></script>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
