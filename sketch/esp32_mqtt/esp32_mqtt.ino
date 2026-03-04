@@ -60,7 +60,7 @@ void readSensors() {
 
   // kalibrasikan sesuai data min dan max
   int gasLevel_raw = analogRead(GAS_PIN);
-  gasLevel_ppm = exp((0.00845 * gasLevel_raw) - 24.10);
+  gasLevel_ppm = exp((0.00786 * gasLevel_raw) - 22.24);
 
 
   Serial.println("SENSOR DATA");
@@ -103,15 +103,15 @@ void readDataMQTT(char* topic, byte* payload, unsigned int length) {
     message += (char)payload[i];
   }
 
-  if (String(topic) == "dashboard/led1") {
+  if (String(topic) == (KEY + "dashboard/led1").c_str()) {
     setLED(LED1, message);
   }
 
-  if (String(topic) == "dashboard/led2") {
+  if (String(topic) == (KEY + "dashboard/led2").c_str()) {
     setLED(LED2, message);
   }
 
-  if (String(topic) == "dashboard/led3") {
+  if (String(topic) == (KEY + "dashboard/led3").c_str()) {
     setLED(LED3, message);
   }
 }
