@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>IoT Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>  
+<h1 class="title">IoT Monitoring Dashboard</h1>
+<div class="card-container">
+    <div class="card">
+        <div class="card-header">
+            <h3>Temperature</h3>
+            <span class="icon">🌡️</span>
+        </div>
+        <div class="card-body">
+            <h2 id="temp">0</h2>
+            <p>°C</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3>Humidity</h3>
+            <span class="icon">💧</span>
+        </div>
+        <div class="card-body">
+            <h2 id="hum">0</h2>
+            <p>%</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3>Gas Level</h3>
+            <span class="icon">🛢️</span>
+        </div>
+        <div class="card-body">
+            <h2 id="gas">0</h2>
+            <p>ppm</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3>Alert</h3>
+            <span class="icon">⚠️</span>
+        </div>
+        <div class="card-body">
+            <h2 id="alert">-</h2>
+        </div>
+    </div>
+</div>
+
+<h2 class="title">LED Control</h2>
+<div class="led-container">
+    <div class="led">
+        <h3 class="led-title">LED 1</h3>
+        <div class="led-buttons">
+            <button onclick="sendLED('led1','ON')">ON</button>
+            <button onclick="sendLED('led1','OFF')">OFF</button>
+        </div>
+    </div>
+
+    <div class="led">
+        <h3 class="led-title">LED 2</h3>
+        <div class="led-buttons">
+            <button onclick="sendLED('led2','ON')">ON</button>
+            <button onclick="sendLED('led2','OFF')">OFF</button>
+        </div>
+    </div>
+
+    <div class="led">
+        <h3 class="led-title">LED 3</h3>
+        <div class="led-buttons">
+            <button onclick="sendLED('led3','ON')">ON</button>
+            <button onclick="sendLED('led3','OFF')">OFF</button>
+        </div>
+    </div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
