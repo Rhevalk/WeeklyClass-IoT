@@ -69,6 +69,8 @@ def control_led():
     state = data["state"]
 
     topic = f"{KEY}/dashboard/{led}"
+
+    print(f"led: {led}, state: {state}")
     mqtt_client.publish(topic, state)
 
     return jsonify({"status": "success"})

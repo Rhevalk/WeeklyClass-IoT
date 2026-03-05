@@ -25,15 +25,23 @@ PubSubClient client(espClient);
 #define LED2 27
 #define LED3 33
 
-// DHT11
+// DHT22
 DHT dht(DHTPIN, DHTTYPE);
+
+// LED Topic
+String topicLED1 = KEY + "/dashboard/led1";
+String topicLED2 = KEY + "/dashboard/led2";
+String topicLED3 = KEY + "/dashboard/led3";
+
+String topicData = KEY + "/sensor/data";
+String topicAlert = KEY + "/alert/gas";
 
 // Variabel Global
 float temperature = 0;
 float humidity = 0;
 float gasLevel_ppm = 0;
 
-const int gasThreshold = 300;
+const int gasThreshold = 3500;
 
 void reconnectMQTT() {
   while (!client.connected()) {
@@ -42,9 +50,9 @@ void reconnectMQTT() {
     if (client.connect("ESP32_WOKWI")) {
       Serial.println("Connected");
 
-      client.subscribe((KEY + "dashboard/led1").c_str());
-      client.subscribe((KEY + "dashboard/led2").c_str());
-      client.subscribe((KEY + "dashboard/led3").c_str());
+      client.subscribe(topicLED1.c_str());
+      client.subscribe(topicLED2.c_str());
+      client.subscribe(topicLED3.c_str());
 
     } else {
       Serial.print("Failed, rc=");
@@ -58,10 +66,7 @@ void readSensors() {
   temperature = dht.readTemperature();
   humidity = dht.readHumidity();
 
-  // kalibrasikan sesuai data min dan max
-  int gasLevel_raw = analogRead(GAS_PIN);
-  gasLevel_ppm = exp((0.00786 * gasLevel_raw) - 22.24);
-
+  gasLevel_ppm = analogRead(GAS_PIN);
 
   Serial.println("SENSOR DATA");
   Serial.print("Temp: "); Serial.println(temperature);
@@ -74,10 +79,11 @@ void handleAlarm() {
   if (gasLevel_ppm > gasThreshold) {
     digitalWrite(BUZZER_PIN, HIGH);
     digitalWrite(RELAY_PIN, HIGH);
-    client.publish((KEY + "/alert/gas").c_str(), "Gas Berbahaya");
+    client.publish(topicAlert.c_str(), "Gas Berbahaya");
   } else {
     digitalWrite(BUZZER_PIN, LOW);
     digitalWrite(RELAY_PIN, LOW);
+    client.publish(topicAlert.c_str(), "Gas Aman");
   }
 }
 
@@ -92,31 +98,28 @@ void sendDataMQTT() {
   char buffer[256];
   serializeJson(doc, buffer);
 
-  client.publish((KEY + "/sensor/data").c_str(), buffer);
+  client.publish(topicData.c_str(), buffer);
 }
 
 void readDataMQTT(char* topic, byte* payload, unsigned int length) {
-
   String message;
-
   for (int i = 0; i < length; i++) {
     message += (char)payload[i];
   }
 
-  if (String(topic) == (KEY + "dashboard/led1").c_str()) {
-    setLED(LED1, message);
-  }
+  Serial.print("MQTT READ: ");
+  Serial.println(message);
 
-  if (String(topic) == (KEY + "dashboard/led2").c_str()) {
-    setLED(LED2, message);
-  }
+  String strTopic = String(topic);
 
-  if (String(topic) == (KEY + "dashboard/led3").c_str()) {
-    setLED(LED3, message);
-  }
+  if (strTopic.equals(topicLED1)) setLED(LED1, message);
+  else if (strTopic.equals(topicLED2)) setLED(LED2, message);
+  else if (strTopic.equals(topicLED3)) setLED(LED3, message);
 }
 
 void setLED(int pin, String state) {
+  state.trim();
+
   if (state == "ON") {
     digitalWrite(pin, HIGH);
   } else {
@@ -163,5 +166,5 @@ void loop() {
   handleAlarm();
   sendDataMQTT();
 
-  delay(3000);
+  delay(1000);
 }
